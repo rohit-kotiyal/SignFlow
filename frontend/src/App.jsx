@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import {BrowserRouter, Routes, Route}  from "react-router-dom"
+import Nav from "./components/nav";
+import Home from "./pages/Home"
+
 
 export default function App(){
-
-  const [message, setMessage] = useState("");
-
-  useEffect(()=>{
-    axios.get("http://127.0.0.1:8000/").then(
-      res => setMessage(res.data.message)).catch(err => console.error(err));
-  },[]);
-
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">
-        {message}
-      </h1>
-    </div>
+
+    <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
+        {/* The Nav stays outside Routes so it shows up on EVERY page */}
+        <Nav />
+
+        <Routes>
+          <Route path="/" element={<Home />}/>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
