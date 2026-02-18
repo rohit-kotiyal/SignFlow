@@ -1,0 +1,100 @@
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../api/auth.api";
+
+export default function Register(){
+    
+    const navigate = useNavigate();
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");  
+    const [error, setError] = useState("");                      
+
+    const hasSpace = password.includes(" ");
+    const matchPassword = password && confirmPassword && password !== confirmPassword;
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        setError("");
+
+        if(hasSpace){
+            setError("Password cannot contain spaces");
+            return;
+        }
+
+        if(matchPassword){
+            setError("Passwords do not match");
+            return;
+        }
+
+        try{
+            await registerUser({
+                name: name.trim(), 
+                email: email.trim(),
+                password: password.trim()  // ✅ was email.trim() — critical bug!
+            });
+            navigate("/login");
+        } catch(err){
+            if(err.response?.status === 400){
+                setError("Email already registered");
+            }else{
+                setError("Something went wrong. Please try again.");  // ✅ typo fixed
+            }
+        }
+    }
+    
+    return (
+        <main className="flex flex-1 justify-center items-center">
+            <div className="w-full max-w-md p-8 rounded-lg shadow-md">
+                <h2 className="text-2xl font-bold text-center mb-6 text-indigo-600">Register To Signflow</h2>
+
+                <form className="space-y-4" onSubmit={handleSubmit}>
+
+                    {error && (
+                        <p className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">{error}</p>
+                    )}
+
+                    <label htmlFor="name" className="font-semibold">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter Your Full Name" 
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border-2 border-indigo-500" required/>
+
+                    <label htmlFor="email" className="font-semibold">Email</label>
+                    <input type="email" id="email" placeholder="Enter Your Email" 
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border-2 border-indigo-500" required/>
+
+                    <label htmlFor="password" className="font-semibold">Password</label>
+                    <input type="password" id="password" placeholder="Enter Your Password"
+                        onChange={(e) => setPassword(e.target.value)} 
+                        className="w-full px-4 py-2 rounded-lg border-2 border-indigo-500" required/>
+                    {hasSpace && (
+                        <p className="text-red-500 text-sm">Password cannot contain spaces</p>
+                    )}
+
+                    <label htmlFor="confirmPassword" className="font-semibold">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Your Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className={`w-full px-4 py-2 rounded-lg border-2 ${matchPassword ? "border-red-500" : "border-indigo-500"}`} required/>
+                    {matchPassword && (
+                        <p className="text-red-500 text-sm">Passwords do not match</p>
+                    )}
+
+                    <button
+                        type="submit"
+                        disabled={!!matchPassword || hasSpace}
+                        className="w-full mt-4 px-4 py-2 text-center text-lg text-white font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 hover:cursor-pointer">
+                        Submit
+                    </button>
+
+                    <div className="flex flex-col justify-center items-center font-semibold">
+                        <p className="text-gray-700 font-semibold">Already Have An Account?</p>
+                        <Link to="/login" className="text-indigo-600 hover:underline hover:text-indigo-500 transition-transform duration-300">Login</Link>
+                    </div>
+
+                </form>
+            </div>
+        </main>
+    );
+}

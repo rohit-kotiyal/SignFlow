@@ -15,7 +15,7 @@ export default function Home(){
                     
                         <ul className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
                             <li className="px-6 py-3 text-lg text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition"><a href="#">Get Started</a></li>
-                            <li className="px-6 py-3 text-lg text-indigo-600 rounded-lg border-indigo-600 border-2"><a href="#">Learn More</a></li>
+                            <li className="px-6 py-3 text-lg text-indigo-600 rounded-lg border-indigo-600 border-2 hover:cursor-pointer"><a href="#">Learn More</a></li>
                         </ul>
                     </div>
                 </div>
