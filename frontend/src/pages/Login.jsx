@@ -19,7 +19,7 @@ export default function Login(){
                 password: password.trim()
             });
             localStorage.setItem("token", res.data.access_token);  // ✅ save token
-            navigate("/");
+            navigate("/dashboard");
         } catch(err){
             if(err.response?.status === 401){
                 setError("Invalid email or password");

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# PDF Worker
+public/pdf.worker.mjs
+public/pdf.worker.min.mjs

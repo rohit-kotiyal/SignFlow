@@ -18,7 +18,7 @@ def get_current_user(
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid Token")
 
-        return user_id
+        return int(user_id)
     
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or Expired Token")
